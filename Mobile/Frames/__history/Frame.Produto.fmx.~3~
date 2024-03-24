@@ -1,0 +1,92 @@
+object FrameProduto: TFrameProduto
+  Size.Width = 180.000000000000000000
+  Size.Height = 230.000000000000000000
+  Size.PlatformDefault = False
+  object Rectangle1: TRectangle
+    Align = Client
+    Fill.Color = claWhite
+    HitTest = False
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 10.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Margins.Bottom = 10.000000000000000000
+    Size.Width = 160.000000000000000000
+    Size.Height = 210.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    XRadius = 10.000000000000000000
+    YRadius = 10.000000000000000000
+    object imgFoto: TImage
+      MultiResBitmap = <
+        item
+        end>
+      Align = Top
+      Margins.Left = 15.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 15.000000000000000000
+      Position.X = 15.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 130.000000000000000000
+      Size.Height = 100.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblFabricante: TLabel
+      Anchors = [akLeft, akBottom]
+      StyledSettings = [Family, Style]
+      Position.X = 15.000000000000000000
+      Position.Y = 151.000000000000000000
+      Size.Width = 67.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFFA0A0A0
+      Text = 'IBM'
+      TabOrder = 4
+    end
+    object lblDescricao: TLabel
+      Align = Top
+      StyledSettings = [Family, Style]
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 120.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 13.000000000000000000
+      TextSettings.FontColor = xFF1F1F1F
+      TextSettings.VertAlign = Leading
+      Text = 'Computador IBM Intel i7 16GB HD 2TB'
+      TabOrder = 3
+    end
+    object lblValor: TLabel
+      Anchors = [akRight, akBottom]
+      StyledSettings = [Family]
+      Position.X = 8.000000000000000000
+      Position.Y = 178.000000000000000000
+      Size.Width = 66.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.StyleExt = {00060000000000000004000000}
+      TextSettings.FontColor = xFF5C5DAD
+      TextSettings.HorzAlign = Trailing
+      Text = 'R$ 0,00'
+      TabOrder = 2
+    end
+    object Label1: TLabel
+      Anchors = [akRight, akBottom]
+      StyledSettings = [Family]
+      Position.X = 91.000000000000000000
+      Position.Y = 178.000000000000000000
+      Size.Width = 57.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.StyleExt = {00060000000000000004000000}
+      TextSettings.FontColor = claBrown
+      TextSettings.HorzAlign = Trailing
+      Text = 'R$ 0,00'
+      TabOrder = 1
+    end
+  end
+end

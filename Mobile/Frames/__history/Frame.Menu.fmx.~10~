@@ -1,0 +1,84 @@
+object FrameMenu: TFrameMenu
+  HitTest = False
+  Size.Width = 80.000000000000000000
+  Size.Height = 82.000000000000000000
+  Size.PlatformDefault = False
+  object Rectangle1: TRectangle
+    Align = Client
+    Fill.Color = claWhite
+    HitTest = False
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Margins.Bottom = 23.000000000000000000
+    Size.Width = 60.000000000000000000
+    Size.Height = 54.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Color = xFF878787
+    Stroke.Join = Round
+    XRadius = 4.000000000000000000
+    YRadius = 4.000000000000000000
+    object lblCategoria: TLabel
+      Align = Bottom
+      StyledSettings = [Family, Style]
+      Margins.Bottom = -20.000000000000000000
+      Position.Y = 54.000000000000000000
+      Size.Width = 60.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 10.000000000000000000
+      TextSettings.FontColor = xFF363238
+      TextSettings.HorzAlign = Center
+      Text = 'XXXXXXXXX'
+      TabOrder = 1
+    end
+    object imgselecao: TImage
+      MultiResBitmap.Height = 120
+      MultiResBitmap.Width = 108
+      MultiResBitmap.LoadSize = 1
+      MultiResBitmap = <
+        item
+          Width = 60
+          Height = 54
+          PNG = {
+            89504E470D0A1A0A0000000D494844520000003C0000003608060000009B67FA
+            14000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            00E8494441546843EDDBBD0DC2301086E173244F108909A840CA2088CC02154B
+            50B10B6113A85881098238EEAC2B7036F0C7F734F14F9A3772BA24C9C2FD35EF
+            3E9D9C6D63134B4D52D567A7E9B0EDF32D968A2AB8C426BD26134B4DB368B5E8
+            FD6F7417D7C2622F28B1CE5BFCB4C6B4A8826D7F1D4318CB57B30AFE070C46C7
+            60740C46C760740C46C760740C46C760740C46C760740C46C760740C46C76074
+            0C46C760740C46C760740C46C760740C46C760740C465705ABC8238630FC5780
+            181675F02C27FF6C3EA6CDF316D5748C6951050FAB3CE93B8D7657F5545AE4A7
+            D562C7A1CF532C19912F945A3AA0D6C8AF920000000049454E44AE426082}
+          FileName = 
+            'C:\Users\Carlos melo\Downloads\Designer\Icones_Imagens\Testes\im' +
+            'g_selecao1.png'
+        end>
+      Align = Client
+      HitTest = False
+      Margins.Left = 1.000000000000000000
+      Margins.Top = 1.000000000000000000
+      Margins.Right = 1.000000000000000000
+      Margins.Bottom = 1.000000000000000000
+      Size.Width = 58.000000000000000000
+      Size.Height = 52.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Stretch
+    end
+    object imgCategoria: TImage
+      MultiResBitmap = <
+        item
+        end>
+      Align = Client
+      HitTest = False
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Size.Width = 40.000000000000000000
+      Size.Height = 38.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+end

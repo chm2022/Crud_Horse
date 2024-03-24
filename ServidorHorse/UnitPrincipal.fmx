@@ -1,0 +1,47 @@
+object FrmPrincipal: TFrmPrincipal
+  Left = 0
+  Top = 0
+  Caption = 'Servidor Horse'
+  ClientHeight = 243
+  ClientWidth = 381
+  Fill.Kind = Solid
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object Label1: TLabel
+    Align = Top
+    StyledSettings = [Family, FontColor]
+    Size.Width = 381.000000000000000000
+    Size.Height = 33.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 16.000000000000000000
+    TextSettings.Font.StyleExt = {00060000000000000004000000}
+    Text = 'Servidor Horse App Doces'
+    TabOrder = 0
+  end
+  object memo: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Align = Client
+    Size.Width = 381.000000000000000000
+    Size.Height = 210.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Viewport.Width = 377.000000000000000000
+    Viewport.Height = 206.000000000000000000
+    object Label2: TLabel
+      StyledSettings = [Family, FontColor]
+      Position.X = 112.000000000000000000
+      Position.Y = 72.000000000000000000
+      Size.Width = 161.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 28.000000000000000000
+      TextSettings.Font.StyleExt = {00060000000000000004000000}
+      Text = 'APP Doces'
+      TabOrder = 0
+    end
+  end
+end

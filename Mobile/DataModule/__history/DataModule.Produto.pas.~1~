@@ -1,0 +1,364 @@
+unit DataModule.Produto;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, DataModule.Global, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, FMX.Graphics,
+  uConstantes, RESTRequest4D, uSession, System.Variants, System.JSON;
+
+type
+  TDmProduto = class(TDataModule)
+    qryConsProduto: TFDQuery;
+    qryProduto: TFDQuery;
+    TabProduto: TFDMemTable;
+    qrySinc: TFDQuery;
+    qryFoto: TFDQuery;
+    QryProdutoVendidos: TFDQuery;
+  private
+
+
+    { Private declarations }
+  public
+    procedure ListarProdutos(pagina: integer; busca, ind_sincronizar: string);
+    procedure ListarProdutoId(cod_produto_local, cod_produto_oficial: integer);
+    procedure InserirProduto(descricao, ind_sincronizar: string;
+                                    valor, qtd_estoque: double;
+                                    foto: TBitmap;
+                                    cod_produto_oficial: integer);
+    procedure EditarProduto(cod_produto_local: integer;
+                                   descricao, ind_sincronizar: string;
+                                   valor, qtd_estoque: double;
+                                   foto: TBitmap);
+    procedure ExcluirProduto(cod_produto_local: integer);
+    procedure ListarProdutosWeb(dt_ult_sinc: string; pagina: integer);
+    procedure InserirProdutoWeb(cod_produto_local: integer; descricao: string;
+                              valor, qtd_estoque: double; cod_produto_oficial: integer;
+                              dt_ult_sincronizacao: string);
+    procedure MarcarProdutoSincronizado(cod_produto_local,
+                                       cod_produto_oficial: integer);
+    procedure EditarFoto(cod_produto_oficial: integer; foto: TBitmap);
+    procedure EditarFotoWebHorse(cod_produto_oficial: integer; arq: string);
+    procedure EditarFotoWebRDW(cod_produto_oficial: integer; foto64: string);
+
+
+    procedure ListarVendidos(mes, ano : string);
+
+    procedure ListarProdutosCat(pagina, id_categoria: integer);
+
+
+  end;
+
+var
+  DmProduto: TDmProduto;
+
+
+implementation
+
+{%CLASSGROUP 'FMX.Controls.TControl'}
+
+{$R *.dfm}
+
+Procedure TDmProduto.ListarVendidos(mes, ano : string);
+begin
+
+    QryProdutoVendidos.Active := false;
+    QryProdutoVendidos.SQL.Clear;
+    QryProdutoVendidos.SQL.Add('select distinct tab_pedido_item.cod_produto_local, tab_produto.DESCRICAO, sum(qtd) as total,tab_produto.foto');
+    QryProdutoVendidos.SQL.Add('from tab_pedido_item');
+    QryProdutoVendidos.SQL.Add('inner join tab_produto on tab_produto.COD_PRODUTO_LOCAL = tab_pedido_item.COD_PRODUTO_LOCAL');
+    QryProdutoVendidos.SQL.Add('inner join tab_pedido on tab_pedido.cod_pedido_local = tab_pedido_item.cod_pedido_local');
+    QryProdutoVendidos.SQL.Add('where strftime(''%m'',tab_pedido.data_pedido) in (:mes) and strftime(''%Y'',tab_pedido.data_pedido) in (:ano)');
+    QryProdutoVendidos.SQL.Add('group by tab_pedido_item.cod_produto_local, tab_produto.descricao, tab_produto.foto');
+    QryProdutoVendidos.SQL.Add('order by total desc ');
+    QryProdutoVendidos.ParamByName('mes').Value := mes;
+    QryProdutoVendidos.ParamByName('ano').Value := ano;
+
+    QryProdutoVendidos.Active := true;
+
+
+end;
+
+
+procedure TDmProduto.ListarProdutosCat(pagina, id_categoria: integer);
+begin
+    qryConsProduto.Active := false;
+    qryConsProduto.SQL.Clear;
+    qryConsProduto.SQL.Add('select p.*, c.id_categoria');
+    qryConsProduto.SQL.Add('from tab_produto p ');
+    qryConsProduto.SQL.Add('inner join tab_categoria c on c.id_categoria = p.id_categoria');
+    qryConsProduto.SQL.Add('where p.cod_produto_local > 0');
+
+    if ID_CATEGORIA > 0 then
+      begin
+        qryConsProduto.SQL.Add('AND P.ID_CATEGORIA = :ID_CATEGORIA');
+        qryConsProduto.ParamByName('ID_CATEGORIA').Value := ID_CATEGORIA;
+      end;
+
+    qryConsProduto.SQL.Add('order by p.descricao');
+
+    if pagina > 0 then
+    begin
+        qryConsProduto.SQL.Add('limit :pagina, :qtd_reg');
+        qryConsProduto.ParamByName('pagina').Value := (pagina - 1) * QTD_REG_PAGINA_PRODUTO;
+        qryConsProduto.ParamByName('qtd_reg').Value := QTD_REG_PAGINA_PRODUTO;
+    end;
+
+    qryConsProduto.Active := true;
+end;
+
+
+
+procedure TDmProduto.ListarProdutos(pagina: integer; busca, ind_sincronizar: string);
+begin
+    qryConsProduto.Active := false;
+    qryConsProduto.SQL.Clear;
+    qryConsProduto.SQL.Add('select p.*');
+    qryConsProduto.SQL.Add('from tab_produto p ');
+    qryConsProduto.SQL.Add('where p.cod_produto_local > 0');
+
+    if busca <> '' then
+    begin
+        qryConsProduto.SQL.Add('and p.descricao like :descricao');
+        qryConsProduto.ParamByName('descricao').Value := '%' + busca + '%';
+    end;
+
+    if ind_sincronizar <> '' then
+    begin
+        qryConsProduto.SQL.Add('and p.ind_sincronizar = :ind_sincronizar');
+        qryConsProduto.ParamByName('ind_sincronizar').Value := ind_sincronizar;
+    end;
+
+    qryConsProduto.SQL.Add('order by p.descricao');
+
+    if pagina > 0 then
+    begin
+        qryConsProduto.SQL.Add('limit :pagina, :qtd_reg');
+        qryConsProduto.ParamByName('pagina').Value := (pagina - 1) * QTD_REG_PAGINA_PRODUTO;
+        qryConsProduto.ParamByName('qtd_reg').Value := QTD_REG_PAGINA_PRODUTO;
+    end;
+
+    qryConsProduto.Active := true;
+end;
+
+procedure TDmProduto.ListarProdutoId(cod_produto_local, cod_produto_oficial: integer);
+begin
+    qryProduto.Active := false;
+    qryProduto.SQL.Clear;
+    qryProduto.SQL.Add('select p.*');
+    qryProduto.SQL.Add('from tab_produto p ');
+    qryProduto.SQL.Add('where p.cod_produto_local > 0');
+
+    if cod_produto_local > 0 then
+    begin
+        qryProduto.SQL.Add('and p.cod_produto_local = :cod_produto_local');
+        qryProduto.ParamByName('cod_produto_local').Value := cod_produto_local;
+    end;
+
+    if cod_produto_oficial > 0 then
+    begin
+        qryProduto.SQL.Add('and p.cod_produto_oficial = :cod_produto_oficial');
+        qryProduto.ParamByName('cod_produto_oficial').Value := cod_produto_oficial;
+    end;
+
+    qryProduto.Active := true;
+end;
+
+procedure TDmProduto.InserirProduto(descricao, ind_sincronizar: string;
+                                    valor, qtd_estoque: double;
+                                    foto: TBitmap;
+                                    cod_produto_oficial: integer);
+begin
+    qryProduto.Active := false;
+    qryProduto.SQL.Clear;
+    qryProduto.SQL.Add('insert into tab_produto(descricao, valor, foto, qtd_estoque, ind_sincronizar, cod_produto_oficial)');
+    qryProduto.SQL.Add('values(:descricao, :valor, :foto, :qtd_estoque, :ind_sincronizar, :cod_produto_oficial)');
+    qryProduto.ParamByName('descricao').Value := descricao;
+    qryProduto.ParamByName('valor').Value := valor;
+
+    if foto <> nil then
+        qryProduto.ParamByName('foto').Assign(foto)
+    else
+    begin
+        qryProduto.ParamByName('foto').DataType := ftString;
+        qryProduto.ParamByName('foto').Value := Unassigned;
+    end;
+
+    qryProduto.ParamByName('qtd_estoque').Value := qtd_estoque;
+    qryProduto.ParamByName('ind_sincronizar').Value := ind_sincronizar;
+    qryProduto.ParamByName('cod_produto_oficial').Value := cod_produto_oficial;
+    qryProduto.ExecSQL;
+end;
+
+procedure TDmProduto.EditarProduto(cod_produto_local: integer;
+                                   descricao, ind_sincronizar: string;
+                                   valor, qtd_estoque: double;
+                                   foto: TBitmap);
+begin
+    qryProduto.Active := false;
+    qryProduto.SQL.Clear;
+    qryProduto.SQL.Add('update tab_produto set descricao=:descricao, valor=:valor, ');
+    qryProduto.SQL.Add('qtd_estoque=:qtd_estoque, ind_sincronizar=:ind_sincronizar');
+
+    if foto <> nil then
+    begin
+        qryProduto.SQL.Add(', foto=:foto');
+        qryProduto.ParamByName('foto').Assign(foto);
+    end;
+
+    qryProduto.SQL.Add('where cod_produto_local = :cod_produto_local');
+    qryProduto.ParamByName('descricao').Value := descricao;
+    qryProduto.ParamByName('valor').Value := valor;
+    qryProduto.ParamByName('qtd_estoque').Value := qtd_estoque;
+    qryProduto.ParamByName('ind_sincronizar').Value := ind_sincronizar;
+    qryProduto.ParamByName('cod_produto_local').Value := cod_produto_local;
+    qryProduto.ExecSQL;
+end;
+
+procedure TDmProduto.ExcluirProduto(cod_produto_local: integer);
+begin
+    qryProduto.Active := false;
+    qryProduto.SQL.Clear;
+    qryProduto.SQL.Add('select * from tab_pedido_item where cod_produto_local = :cod_produto_local');
+    qryProduto.ParamByName('cod_produto_local').Value := cod_produto_local;
+    qryProduto.Active := true;
+
+    if qryProduto.RecordCount > 0 then
+        raise Exception.Create('O produto já está sendo usado por um pedido e não pode ser excluído.');
+
+    qryProduto.Active := false;
+    qryProduto.SQL.Clear;
+    qryProduto.SQL.Add('delete from tab_produto where cod_produto_local = :cod_produto_local');
+    qryProduto.ParamByName('cod_produto_local').Value := cod_produto_local;
+    qryProduto.ExecSQL;
+end;
+
+procedure TDmProduto.ListarProdutosWeb(dt_ult_sinc: string; pagina: integer);
+var
+    resp: IResponse;
+begin
+    TabProduto.FieldDefs.Clear;
+
+    resp := TRequest.New.BaseURL(BASE_URL)
+            .Resource('produtos/sincronizacao')  // Horse
+            //.Resource('produtos/sincronizacaoprod')  // RDW
+            .AddParam('dt_ult_sincronizacao', dt_ult_sinc)
+            .AddParam('pagina', pagina.ToString)
+            .TokenBearer(TSession.TOKEN_JWT)
+            .Accept('application/json')
+            .DataSetAdapter(TabProduto)
+            .Get;
+
+    if resp.StatusCode <> 200 then
+        raise Exception.Create(resp.Content);
+
+end;
+
+procedure TDmProduto.InserirProdutoWeb(cod_produto_local: integer;
+                                       descricao: string;
+                                       valor, qtd_estoque: double;
+                                       cod_produto_oficial: integer;
+                                       dt_ult_sincronizacao: string);
+var
+    resp: IResponse;
+    json: TJsonObject;
+begin
+    TabProduto.FieldDefs.Clear;
+
+    try
+        json := TJsonObject.Create;
+        json.AddPair('cod_produto_local', TJSONNumber.Create(cod_produto_local));
+        json.AddPair('descricao', descricao);
+        json.AddPair('valor', TJSONNumber.Create(valor));
+        json.AddPair('qtd_estoque', TJSONNumber.Create(qtd_estoque));
+        json.AddPair('cod_produto_oficial', TJSONNumber.Create(cod_produto_oficial));
+        json.AddPair('dt_ult_sincronizacao', dt_ult_sincronizacao);
+
+        resp := TRequest.New.BaseURL(BASE_URL)
+                .Resource('produtos/sincronizacao')   // Horse
+                //.Resource('produtos/sincronizacaoprod')  // RDW
+                .TokenBearer(TSession.TOKEN_JWT)
+                .AddBody(json.ToJSON)
+                .Accept('application/json')
+                .DataSetAdapter(TabProduto)
+                .Post;
+
+        if resp.StatusCode <> 200 then
+            raise Exception.Create(resp.Content);
+
+    finally
+        json.DisposeOf;
+    end;
+end;
+
+
+procedure TDmProduto.MarcarProdutoSincronizado(cod_produto_local, cod_produto_oficial: integer);
+begin
+    qrySinc.Active := false;
+    qrySinc.SQL.Clear;
+    qrySinc.SQL.Add('update tab_produto set cod_produto_oficial=:cod_produto_oficial,');
+    qrySinc.SQL.Add('ind_sincronizar=:ind_sincronizar');
+    qrySinc.SQL.Add('where cod_produto_local=:cod_produto_local');
+
+    qrySinc.ParamByName('cod_produto_oficial').Value := cod_produto_oficial;
+    qrySinc.ParamByName('ind_sincronizar').Value := 'N';
+    qrySinc.ParamByName('cod_produto_local').Value := cod_produto_local;
+    qrySinc.ExecSQL;
+end;
+
+
+procedure TDmProduto.EditarFoto(cod_produto_oficial: integer; foto: TBitmap);
+begin
+    qryFoto.Active := false;
+    qryFoto.SQL.Clear;
+    qryFoto.SQL.Add('update tab_produto set foto=:foto');
+    qryFoto.SQL.Add('where cod_produto_oficial = :cod_produto_oficial');
+
+    qryFoto.ParamByName('foto').Assign(foto);
+    qryFoto.ParamByName('cod_produto_oficial').Value := cod_produto_oficial;
+
+    qryFoto.ExecSQL;
+end;
+
+procedure TDmProduto.EditarFotoWebHorse(cod_produto_oficial: integer; arq: string);
+var
+    resp: IResponse;
+begin
+    resp := TRequest.New.BaseURL(BASE_URL)
+            .Resource('produtos/foto')
+            .ResourceSuffix(cod_produto_oficial.ToString)
+            .TokenBearer(TSession.TOKEN_JWT)
+            .AddParam('files', arq, pkFILE)
+            .Put;
+
+    if resp.StatusCode <> 200 then
+        raise Exception.Create(resp.Content);
+end;
+
+procedure TDmProduto.EditarFotoWebRDW(cod_produto_oficial: integer; foto64: string);
+var
+    resp: IResponse;
+    json: TJSONObject;
+begin
+    try
+        json := TJSONObject.Create;
+        json.AddPair('foto64', foto64);
+
+        resp := TRequest.New.BaseURL(BASE_URL)
+                .Resource('produtos/foto')
+                .ResourceSuffix(cod_produto_oficial.ToString + '/0')
+                .TokenBearer(TSession.TOKEN_JWT)
+                .AddBody(json.ToJSON)
+                .Accept('application/json')
+                .Put;
+
+        if resp.StatusCode <> 200 then
+            raise Exception.Create(resp.Content);
+    finally
+        json.DisposeOf;
+    end;
+end;
+
+end.

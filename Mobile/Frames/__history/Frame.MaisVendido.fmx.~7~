@@ -1,0 +1,81 @@
+object FrameMaisVendido: TFrameMaisVendido
+  Size.Width = 140.000000000000000000
+  Size.Height = 135.000000000000000000
+  Size.PlatformDefault = False
+  object Rectangle1: TRectangle
+    Align = Client
+    Fill.Color = claWhite
+    HitTest = False
+    Margins.Left = 5.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Size.Width = 130.000000000000000000
+    Size.Height = 125.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    XRadius = 10.000000000000000000
+    YRadius = 10.000000000000000000
+    object imgFoto: TImage
+      MultiResBitmap = <
+        item
+        end>
+      Align = Top
+      HitTest = False
+      Margins.Left = 25.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 25.000000000000000000
+      Position.X = 25.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 52.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblFabricante: TLabel
+      Anchors = [akLeft, akBottom]
+      StyledSettings = [Family, Style]
+      Position.X = 21.000000000000000000
+      Position.Y = 102.000000000000000000
+      Size.Width = 44.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFFA0A0A0
+      Text = 'Qtd M'#234's'
+      TabOrder = 3
+    end
+    object lblDescricao: TLabel
+      Align = Top
+      StyledSettings = [Family, Style]
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 62.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFF1F1F1F
+      TextSettings.HorzAlign = Center
+      TextSettings.VertAlign = Leading
+      Text = 'Brigadeiro Tradicional'
+      TabOrder = 2
+    end
+    object lblValor: TLabel
+      Anchors = [akRight, akBottom]
+      StyledSettings = [Family]
+      Position.X = 70.000000000000000000
+      Position.Y = 102.000000000000000000
+      Size.Width = 29.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.Font.StyleExt = {00060000000000000004000000}
+      TextSettings.FontColor = xFF5C5DAD
+      TextSettings.HorzAlign = Trailing
+      Text = '0'
+      TabOrder = 1
+    end
+  end
+end

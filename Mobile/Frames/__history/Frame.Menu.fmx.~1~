@@ -1,0 +1,50 @@
+object FrameMenu: TFrameMenu
+  HitTest = False
+  Size.Width = 85.000000000000000000
+  Size.Height = 85.000000000000000000
+  Size.PlatformDefault = False
+  object Rectangle1: TRectangle
+    Align = Client
+    Fill.Color = xFFE5E5E5
+    HitTest = False
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Margins.Bottom = 23.000000000000000000
+    Size.Width = 65.000000000000000000
+    Size.Height = 57.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Color = xFFC1C1C1
+    Stroke.Join = Round
+    XRadius = 6.000000000000000000
+    YRadius = 6.000000000000000000
+    object imgCategoria: TImage
+      MultiResBitmap = <
+        item
+        end>
+      Align = Client
+      HitTest = False
+      Margins.Left = 8.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Size.Width = 49.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblCategoria: TLabel
+      Align = Bottom
+      StyledSettings = [Family, Style]
+      Margins.Bottom = -20.000000000000000000
+      Position.Y = 57.000000000000000000
+      Size.Width = 65.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 10.000000000000000000
+      TextSettings.FontColor = xFF363238
+      TextSettings.HorzAlign = Center
+      Text = 'XXXXXXXXX'
+      TabOrder = 1
+    end
+  end
+end
